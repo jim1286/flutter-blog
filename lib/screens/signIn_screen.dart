@@ -39,7 +39,7 @@ class _SignInScreenState extends State<SignInScreen> {
       await pref.setString('accessToken', token.accessToken);
       await pref.setString('refreshToken', token.refreshToken);
 
-      context.go('/main');
+      context.go('/');
     } catch (e) {
       print(e);
     }

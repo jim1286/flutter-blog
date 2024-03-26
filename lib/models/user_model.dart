@@ -1,7 +1,7 @@
 class UserModel {
-  final String userId, userName;
+  final String id, userName;
 
   UserModel.fromJson(Map<String, dynamic> json)
-      : userId = json['userId'],
+      : id = json['id'],
         userName = json['userName'];
 }
