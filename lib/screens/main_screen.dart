@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blog/models/post_model.dart';
-import 'package:flutter_blog/services/post_service.dart';
+import 'package:flutter_blog/proviers/post.provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
-  late Future<List<PostModel>> postList;
+class _MainScreenState extends ConsumerState<MainScreen> {
   late SharedPreferences pref;
 
   Future initPref() async {
@@ -23,7 +22,6 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
 
-    postList = PostService().getAllPostList();
     initPref();
   }
 
@@ -33,8 +31,14 @@ class _MainScreenState extends State<MainScreen> {
     context.go('/login');
   }
 
+  void _navigateToCreatePostScreen() {
+    context.go('/post/create');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final postList = ref.watch(postListProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -71,21 +75,36 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                     ),
                   ),
+                  GestureDetector(
+                    onTap: () => _navigateToCreatePostScreen(),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text(
+                          "글 작성",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              FutureBuilder(
-                future: postList,
-                builder: (context, snapshot) {
-                  print(snapshot.data);
-                  if (snapshot.hasData) {
-                    return Column(children: [
-                      for (var post in snapshot.data!) Text(post.title)
-                    ]);
+              postList.when(
+                data: (postList) {
+                  if (postList.isEmpty) {
+                    return const Text('empty');
                   }
 
-                  return const Text('...');
+                  return Column(
+                      children: [for (var post in postList) Text(post.title)]);
                 },
-              ),
+                error: (error, stack) => const Center(child: Text("error")),
+                loading: () => const Center(child: CircularProgressIndicator()),
+              )
             ],
           ),
         ],

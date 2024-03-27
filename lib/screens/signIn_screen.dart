@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_blog/services/user_service.dart';
 import 'package:flutter_blog/widgets/input_widget.dart';
 import 'package:go_router/go_router.dart';
@@ -53,9 +51,9 @@ class _SignInScreenState extends State<SignInScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            InputWidget(formType: 'userName', controller: idController),
+            InputWidget(formType: '아이디', controller: idController),
             const SizedBox(height: 10),
-            InputWidget(formType: 'password', controller: pwController),
+            InputWidget(formType: '비밀번호', controller: pwController),
             const SizedBox(height: 10),
             GestureDetector(
               onTap: () => _printLatestValue(),

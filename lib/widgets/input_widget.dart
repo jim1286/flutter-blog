@@ -13,9 +13,9 @@ class InputWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: TextField(
         controller: controller,
-        obscureText: formType == 'password',
+        obscureText: formType == '비밀번호',
         decoration: InputDecoration(
-          labelText: formType == 'userName' ? "아이디" : "비밀번호",
+          labelText: formType,
           enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey)),
           focusedBorder: const OutlineInputBorder(
