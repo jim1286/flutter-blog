@@ -38,6 +38,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     context.go('/post/create');
   }
 
+  void _navigateToPostScreen(String postId) {
+    context.go('/post/&$postId');
+  }
+
   @override
   Widget build(BuildContext context) {
     final postList = ref.watch(postListProvider);
@@ -95,9 +99,11 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                           var post = postList[index];
 
                           return PostCardWidget(
+                            id: post.id,
                             title: post.title,
                             content: post.content,
                             subTitle: post.subTitle,
+                            callback: _navigateToPostScreen,
                           );
                         },
                         separatorBuilder: (context, index) {

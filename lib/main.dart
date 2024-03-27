@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog/screens/createPost_screen.dart';
 import 'package:flutter_blog/screens/main_screen.dart';
+import 'package:flutter_blog/screens/post_screen.dart';
 import 'package:flutter_blog/screens/signIn_screen.dart';
 import 'package:flutter_blog/screens/signUp_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -18,6 +19,13 @@ final GoRouter _router = GoRouter(
           GoRoute(
               path: 'post/create',
               builder: (context, state) => const CreatePostScreen()),
+          GoRoute(
+              path: 'post/:postId',
+              builder: (context, state) {
+                final postId = state.pathParameters['postId'] as String;
+
+                return PostScreen(postId: postId);
+              }),
         ]),
     GoRoute(path: '/signIn', builder: (context, state) => const SignInScreen()),
     GoRoute(path: '/signUp', builder: (context, state) => const SignUpScreen()),
