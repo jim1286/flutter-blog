@@ -62,7 +62,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () => _logout(),
+                      onTap: () => _navigateToCreatePostScreen(),
                       child: Container(
                         decoration: const BoxDecoration(
                           color: Colors.blue,
@@ -70,7 +70,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                         child: const Padding(
                           padding: EdgeInsets.all(20),
                           child: Text(
-                            "로그아웃",
+                            "글 작성",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w800),
@@ -78,8 +78,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                         ),
                       ),
                     ),
+                    const SizedBox(width: 10),
                     GestureDetector(
-                      onTap: () => _navigateToCreatePostScreen(),
+                      onTap: () => _logout(),
                       child: Container(
                         decoration: const BoxDecoration(
                           color: Colors.red,
@@ -87,7 +88,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                         child: const Padding(
                           padding: EdgeInsets.all(20),
                           child: Text(
-                            "글 작성",
+                            "로그아웃",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w800),
