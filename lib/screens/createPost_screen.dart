@@ -55,9 +55,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             InputWidget(formType: '본문', controller: contentController),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: () async {
-                await _createPost();
-              },
+              onTap: () => _createPost(),
               child: Container(
                 padding: const EdgeInsets.all(20),
                 margin: const EdgeInsets.symmetric(horizontal: 25),

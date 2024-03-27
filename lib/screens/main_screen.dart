@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_blog/proviers/post.provider.dart';
+import 'package:flutter_blog/widgets/button_widget.dart';
+import 'package:flutter_blog/widgets/postCard_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,40 +63,16 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                      onTap: () => _navigateToCreatePostScreen(),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.blue,
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Text(
-                            "글 작성",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800),
-                          ),
-                        ),
-                      ),
+                    ButtonWidget(
+                      callback: _navigateToCreatePostScreen,
+                      buttonText: "글 작성",
+                      buttonColor: Colors.blue,
                     ),
                     const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () => _logout(),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Text(
-                            "로그아웃",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800),
-                          ),
-                        ),
-                      ),
+                    ButtonWidget(
+                      callback: _logout,
+                      buttonText: "로그아웃",
+                      buttonColor: Colors.red,
                     ),
                   ],
                 ),
@@ -116,16 +94,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                         itemBuilder: (context, index) {
                           var post = postList[index];
 
-                          return Container(
-                            width: 250,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              border: Border.all(color: Colors.black),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Center(
-                              child: Text(post.title),
-                            ),
+                          return PostCardWidget(
+                            title: post.title,
+                            content: post.content,
+                            subTitle: post.subTitle,
                           );
                         },
                         separatorBuilder: (context, index) {
