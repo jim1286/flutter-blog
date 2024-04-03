@@ -33,17 +33,19 @@ class _PostScreenState extends State<PostScreen> {
         body: Consumer<PostProvider>(builder: (context, ref, child) {
           return ref.isLoading
               ? const Center(child: CircularProgressIndicator())
-              : Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(ref.post!.title),
-                      if (ref.post!.subTitle != null)
-                        Text(ref.post!.subTitle as String),
-                      Text(ref.post!.content)
-                    ],
-                  ),
-                );
+              : ref.post != null
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(ref.post!.title),
+                          if (ref.post!.subTitle != null)
+                            Text(ref.post!.subTitle as String),
+                          Text(ref.post!.content)
+                        ],
+                      ),
+                    )
+                  : const Text("Empty");
         }));
   }
 }

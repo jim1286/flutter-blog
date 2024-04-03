@@ -86,31 +86,33 @@ class _MainScreenState extends State<MainScreen> {
                     const SizedBox(height: 50),
                     ref.isLoading
                         ? const Center(child: CircularProgressIndicator())
-                        : SizedBox(
-                            width: 400,
-                            height: 400,
-                            child: ListView.separated(
-                              itemCount: ref.postList.length,
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              itemBuilder: (context, index) {
-                                var post = ref.postList[index];
+                        : ref.postList != null
+                            ? SizedBox(
+                                width: 400,
+                                height: 400,
+                                child: ListView.separated(
+                                  itemCount: ref.postList!.length,
+                                  scrollDirection: Axis.horizontal,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 20),
+                                  itemBuilder: (context, index) {
+                                    var post = ref.postList![index];
 
-                                return PostCardWidget(
-                                  id: post.id,
-                                  title: post.title,
-                                  content: post.content,
-                                  subTitle: post.subTitle,
-                                  callback: _navigateToPostScreen,
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return const SizedBox(
-                                  width: 40,
-                                );
-                              },
-                            )),
+                                    return PostCardWidget(
+                                      id: post.id,
+                                      title: post.title,
+                                      content: post.content,
+                                      subTitle: post.subTitle,
+                                      callback: _navigateToPostScreen,
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) {
+                                    return const SizedBox(
+                                      width: 40,
+                                    );
+                                  },
+                                ))
+                            : const Text("Empty")
                   ],
                 ),
               ),

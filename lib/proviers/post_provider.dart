@@ -3,14 +3,14 @@ import 'package:flutter_blog/models/post_model.dart';
 import 'package:flutter_blog/services/post_service.dart';
 
 class PostProvider with ChangeNotifier {
-  final _postService = PostService();
   bool isLoading = false;
+  final _postService = PostService();
 
-  late PostModel _post;
-  late List<PostModel> _postList = List.empty(growable: true);
+  PostModel? _post;
+  List<PostModel>? _postList;
 
-  PostModel get post => _post;
-  List<PostModel> get postList => _postList;
+  PostModel? get post => _post;
+  List<PostModel>? get postList => _postList;
 
   getAllPostList() async {
     isLoading = true;

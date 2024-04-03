@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blog/proviers/post_provider.dart';
 import 'package:flutter_blog/services/post_service.dart';
 import 'package:flutter_blog/widgets/input_widget.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreatePostScreen extends StatefulWidget {
@@ -26,17 +28,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     final content = contentController.text;
 
     Map<String, String> body = {'title': title, 'content': content};
-
-    try {
-      await PostService().createPost(body);
-      context.pop();
-    } catch (e) {
-      print(e);
-    }
+    await PostService().createPost(body);
   }
 
   @override
   Widget build(BuildContext context) {
+    final postProvider = Provider.of<PostProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -52,7 +50,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             InputWidget(formType: '본문', controller: contentController),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: () => _createPost(),
+              onTap: () async {
+                try {
+                  await _createPost();
+
+                  postProvider.getAllPostList();
+                  context.pop();
+                } catch (e) {
+                  print(e);
+                }
+              },
               child: Container(
                 padding: const EdgeInsets.all(20),
                 margin: const EdgeInsets.symmetric(horizontal: 25),
