@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_blog/proviers/post.provider.dart';
+import 'package:flutter_blog/proviers/post_provider.dart';
 import 'package:flutter_blog/widgets/button_widget.dart';
 import 'package:flutter_blog/widgets/postCard_widget.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MainScreen extends ConsumerStatefulWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
-  ConsumerState<MainScreen> createState() => _MainScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends ConsumerState<MainScreen> {
+class _MainScreenState extends State<MainScreen> {
   late SharedPreferences pref;
 
   Future initPref() async {
@@ -26,6 +26,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     super.initState();
 
     initPref();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<PostProvider>(context, listen: false).getAllPostList();
+    });
   }
 
   void _logout() {
@@ -39,13 +42,11 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   }
 
   void _navigateToPostScreen(String postId) {
-    context.go('/post/&$postId');
+    context.go('/post/$postId');
   }
 
   @override
   Widget build(BuildContext context) {
-    final postList = ref.watch(postListProvider);
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -58,70 +59,64 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               color: Colors.green, fontSize: 22, fontWeight: FontWeight.w600),
         ),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 30),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: Consumer<PostProvider>(
+        builder: (context, ref, child) {
+          return Column(
+            children: [
+              const SizedBox(height: 30),
+              Expanded(
+                child: Column(
                   children: [
-                    ButtonWidget(
-                      callback: _navigateToCreatePostScreen,
-                      buttonText: "글 작성",
-                      buttonColor: Colors.blue,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ButtonWidget(
+                          callback: _navigateToCreatePostScreen,
+                          buttonText: "글 작성",
+                          buttonColor: Colors.blue,
+                        ),
+                        const SizedBox(width: 10),
+                        ButtonWidget(
+                          callback: _logout,
+                          buttonText: "로그아웃",
+                          buttonColor: Colors.red,
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 10),
-                    ButtonWidget(
-                      callback: _logout,
-                      buttonText: "로그아웃",
-                      buttonColor: Colors.red,
-                    ),
+                    const SizedBox(height: 50),
+                    ref.isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : SizedBox(
+                            width: 400,
+                            height: 400,
+                            child: ListView.separated(
+                              itemCount: ref.postList.length,
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              itemBuilder: (context, index) {
+                                var post = ref.postList[index];
+
+                                return PostCardWidget(
+                                  id: post.id,
+                                  title: post.title,
+                                  content: post.content,
+                                  subTitle: post.subTitle,
+                                  callback: _navigateToPostScreen,
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return const SizedBox(
+                                  width: 40,
+                                );
+                              },
+                            )),
                   ],
                 ),
-                const SizedBox(height: 50),
-                postList.when(
-                  data: (postList) {
-                    if (postList.isEmpty) {
-                      return const Text('empty');
-                    }
-
-                    return SizedBox(
-                      width: 400,
-                      height: 400,
-                      child: ListView.separated(
-                        itemCount: postList.length,
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        itemBuilder: (context, index) {
-                          var post = postList[index];
-
-                          return PostCardWidget(
-                            id: post.id,
-                            title: post.title,
-                            content: post.content,
-                            subTitle: post.subTitle,
-                            callback: _navigateToPostScreen,
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(
-                            width: 40,
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  error: (error, stack) => const Center(child: Text("error")),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                )
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

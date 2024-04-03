@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blog/proviers/post_provider.dart';
 import 'package:flutter_blog/screens/createPost_screen.dart';
 import 'package:flutter_blog/screens/main_screen.dart';
 import 'package:flutter_blog/screens/post_screen.dart';
 import 'package:flutter_blog/screens/signIn_screen.dart';
 import 'package:flutter_blog/screens/signUp_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GoRouter _router = GoRouter(
@@ -51,7 +52,9 @@ final GoRouter _router = GoRouter(
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => PostProvider()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

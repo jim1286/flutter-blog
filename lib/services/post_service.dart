@@ -41,11 +41,31 @@ class PostService {
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
-      final models = jsonDecode(response.body);
+      final posts = jsonDecode(response.body);
 
-      return models
+      return posts
           .map<PostModel>((model) => PostModel.fromJson(model))
           .toList();
+    }
+
+    throw Exception(response.body);
+  }
+
+  Future<PostModel> getPostById(String postId) async {
+    final url = Uri.parse(('$baseUrl$basePath/$postId'));
+    final pref = await SharedPreferences.getInstance();
+    final accessToken = pref.getString('accessToken');
+
+    if (accessToken != null) {
+      headers["Authorization"] = 'Bearer $accessToken';
+    }
+
+    final response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      final post = jsonDecode(response.body);
+
+      return PostModel.fromJson(post);
     }
 
     throw Exception(response.body);

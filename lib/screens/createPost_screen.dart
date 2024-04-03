@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blog/proviers/post.provider.dart';
 import 'package:flutter_blog/services/post_service.dart';
 import 'package:flutter_blog/widgets/input_widget.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CreatePostScreen extends ConsumerStatefulWidget {
+class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
 
   @override
-  ConsumerState<CreatePostScreen> createState() => _CreatePostScreenState();
+  State<CreatePostScreen> createState() => _CreatePostScreenState();
 }
 
-class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
+class _CreatePostScreenState extends State<CreatePostScreen> {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
   late SharedPreferences pref;
@@ -31,7 +29,6 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
     try {
       await PostService().createPost(body);
-      ref.invalidate(postListProvider);
       context.pop();
     } catch (e) {
       print(e);
